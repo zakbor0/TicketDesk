@@ -29,7 +29,7 @@ namespace TicketDesk.Localization
                 if (config != null)
                 {
                     var section = config.GetSection("system.web/globalization") as GlobalizationSection;
-                    if (section != null)
+                    if (section != null && section.Culture != "")
                         name = GetImplementedCulture(section.Culture);
                 }
                 return name;
@@ -60,10 +60,10 @@ namespace TicketDesk.Localization
         {
             // make sure it's not null
             if (string.IsNullOrEmpty(name))
-                return GetDefaultCulture(); // return Default culture
+                return GetDefaultCultureHardcoded(); // return Default culture
             // make sure it is a valid culture first
             if (_validCultures.Where(c => c.Equals(name, StringComparison.InvariantCultureIgnoreCase)).Count() == 0)
-                return GetDefaultCulture(); // return Default culture if it is invalid
+                return GetDefaultCultureHardcoded(); // return Default culture if it is invalid
             // if it is implemented, accept it
             if (_cultures.Keys.Where(c => c.Equals(name, StringComparison.InvariantCultureIgnoreCase)).Count() > 0)
                 return name; // accept it
@@ -75,7 +75,7 @@ namespace TicketDesk.Localization
                     return c;
             // else 
             // It is not implemented
-            return GetDefaultCulture(); // return Default culture as no match found
+            return GetDefaultCultureHardcoded(); // return Default culture as no match found
         }
 
         /// <summary>
@@ -85,6 +85,11 @@ namespace TicketDesk.Localization
         public static string GetDefaultCulture()
         {
             return _defaultCulture; // return Default culture
+        }
+
+        public static string GetDefaultCultureHardcoded()
+        {
+            return "en-US"; // return Default culture
         }
 
         public static string GetCurrentCulture()
